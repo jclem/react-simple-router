@@ -1,4 +1,4 @@
-import React, {createContext, PropsWithChildren, useState} from 'react'
+import React, {createContext, PropsWithChildren, useState, useEffect} from 'react'
 
 /*
  * Create a context that will contain the route state and a function to set the
@@ -15,6 +15,12 @@ const RouterContext = createContext<{
  */
 function RouterProvider(props: PropsWithChildren<unknown>) {
   const [route, setRoute] = useState(location.pathname)
+
+  useEffect(() => {
+    const setRouteToPathname = () => setRoute(location.pathname)
+    window.addEventListener('popstate', setRouteToPathname)
+    return () => window.removeEventListener('popstate', setRouteToPathname)
+  }, [])
 
   return (
     <RouterContext.Provider
